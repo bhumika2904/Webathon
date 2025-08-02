@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zepto Cafe — Brewing...</title>
+  <style>
+    /* Your full CSS from earlier (already optimized) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .counter-section { position: absolute; top: 40px; left: 40px; z-index: 10; }
+    .counter {
+      font-size: 2rem; font-weight: bold; letter-spacing: 0.1em;
+      font-family: 'Arial Black', sans-serif;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    .text-section {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: flex-start;
+      text-align: left; max-width: 800px; width: 100%;
+    }
+    .loading-text {
+      font-size: clamp(4rem, 8vw, 7rem); font-weight: 300; line-height: 1.1;
+    }
+    .text-line { overflow: hidden; margin-bottom: 10px; }
+    .text-content {
+      display: inline-block;
+      transform: translateY(100%);
+      animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    .text-line:nth-child(1) .text-content { animation-delay: 1s; }
+    .text-line:nth-child(2) .text-content { animation-delay: 1.3s; }
+    .text-line:nth-child(3) .text-content { animation-delay: 1.6s; }
+
+    @keyframes slideUp {
+      to { transform: translateY(0); }
+    }
+
+    .now-text {
+      font-weight: bold;
+      animation: fontSwitch 2s infinite alternate ease-in-out;
+      display: inline-block;
+      color: #ffee00;
+    }
+
+    @keyframes fontSwitch {
+      0% {
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+      }
+      100% {
+        font-family: 'Georgia', 'Times', serif;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .please-wait {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: fadeInWait 0.5s ease-in-out forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes fadeInWait { to { opacity: 1; } }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 40px;
+      left: 80px;
+      right: 80px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffee00, #ff8800);
+      width: 0%;
+      border-radius: 1px;
+      transition: width 0.1s ease-out;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+      animation: backgroundPulse 4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes backgroundPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+
+    @media (max-width: 768px) {
+      .counter-section { top: 20px; left: 20px; }
+      .counter { font-size: 1.5rem; }
+      .text-section { max-width: 90%; padding: 0 20px; }
+      .please-wait { bottom: 60px; font-size: 0.9rem; }
+      .progress-bar { left: 20px; right: 20px; bottom: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .loading-text { font-size: clamp(2.5rem, 6vw, 4rem); }
+      .counter { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="counter-section">
+    <div class="counter" id="counter">0-100</div>
+  </div>
+
+  <div class="text-section">
+    <div class="loading-text">
+      <div class="text-line"><span class="text-content">Freshly brewed</span></div>
+      <div class="text-line"><span class="text-content">caffeine is being prepared</span></div>
+      <div class="text-line"><span class="text-content">just for <span class="now-text">you</span></span></div>
+    </div>
+  </div>
+
+  <div class="please-wait">Your The API-tizer experience is loading...</div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <script>
+    class LoadingScreen {
+      constructor() {
+        this.counter = document.getElementById('counter');
+        this.progressFill = document.getElementById('progressFill');
+        this.currentCount = 0;
+        this.targetCount = 100;
+        this.duration = 5000;
+        this.startTime = null;
+        this.init();
+      }
+
+      init() {
+        setTimeout(() => this.startAnimation(), 500);
+      }
+
+      startAnimation() {
+        this.startTime = performance.now();
+        this.animate();
+      }
+
+      animate() {
+        const currentTime = performance.now();
+        const elapsed = currentTime - this.startTime;
+        const progress = Math.min(elapsed / this.duration, 1);
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        this.currentCount = Math.floor(easeOutQuart * this.targetCount);
+        this.counter.textContent = `${this.currentCount}-100`;
+        this.progressFill.style.width = `${progress * 100}%`;
+
+        if (progress < 0.9 && Math.random() < 0.1) {
+          setTimeout(() => {
+            if (progress < 1) {
+              requestAnimationFrame(() => this.animate());
+            } else {
+              this.onComplete();
+            }
+          }, Math.random() * 100 + 50);
+        } else if (progress < 1) {
+          requestAnimationFrame(() => this.animate());
+        } else {
+          this.onComplete();
+        }
+      }
+
+      onComplete() {
+        this.counter.textContent = '100-100';
+        this.progressFill.style.width = '100%';
+        setTimeout(() => {
+          this.counter.style.color = '#ffee00';
+          this.counter.style.textShadow = '0 0 50px rgba(255, 238, 0, 0.5)';
+        }, 200);
+        setTimeout(() => {
+          window.location.href = 'Element4.html'; // ✅ redirect to the main page
+        }, 1000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      new LoadingScreen();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      document.body.style.background = `
+        radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.03) 0%, transparent 50%),
+        #000000
+      `;
+    });
+  </script>
+</body>
+</html>
