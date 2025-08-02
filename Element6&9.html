@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Taste Greatness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Source+Serif+4:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    <style>
+        /* --- Basic Setup --- */
+        :root {
+            --font-display: 'Montserrat', sans-serif;
+            --font-body: 'Source Serif 4', serif;
+            --color-text: #e0e0e0;
+            --color-bg: #121212;
+            --color-primary: #c9a47e;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+        }
+
+        /* --- Hero Section Styling --- */
+        .hero-section {
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh; 
+            position: relative;
+            color: #ffffff;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            font-size: clamp(1.5rem, 4.5vw, 4rem); 
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            padding: 10vh 5vw;
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        /* Background Carousel Styling */
+        .bg-carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .bg-carousel .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2;
+        }
+
+        /* --- Animated Text Container --- */
+        .animated-title {
+            text-align: left;
+            line-height: 1.2;
+            position: relative;
+            z-index: 3;
+        }
+
+        .line {
+            display: block;
+            height: 1.2em;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-out;
+        }
+        
+        .letter-container {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: top;
+        }
+
+        .letter {
+            display: inline-block;
+            transform: translateY(100%);
+        }
+
+        .letter.animate {
+            animation: slide-up 0.8s cubic-bezier(0.6, 0.01, 0, 0.9) forwards;
+        }
+
+        @keyframes slide-up {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Marquee Section --- */
+        .marquee-section {
+            padding: 10vh 0;
+            position: relative;
+            background-color: var(--color-bg);
+            overflow: hidden;
+        }
+        .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+        .marquee {
+            display: flex;
+            gap: 40px;
+            width: fit-content;
+            animation: scroll-left 40s linear infinite;
+        }
+        .marquee-wrapper:hover .marquee {
+            animation-play-state: paused;
+        }
+        .image-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+        }
+        .image-box img {
+            height: 280px;
+            width: 420px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            transition: transform 0.4s ease;
+        }
+        .image-box img:hover {
+            transform: scale(1.05);
+        }
+        .image-box span {
+            margin-top: 15px;
+            font-size: 1.05rem;
+            color: #ccc;
+            font-weight: 500;
+        }
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        /* --- NEW: Testimonials Section --- */
+        .testimonials-section {
+            padding: 10vh 5vw;
+            background-color: #1a1a1a;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 2em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .testimonial-card {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .testimonial-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .testimonial-card p {
+            font-style: italic;
+            margin: 0 0 1rem 0;
+            line-height: 1.6;
+        }
+        .testimonial-card .author {
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        /* --- NEW: Footer --- */
+        .footer {
+            background-color: #000;
+            padding: 4rem 5vw;
+            text-align: center;
+            color: #888;
+        }
+        .footer .social-links {
+            margin-bottom: 1.5rem;
+        }
+        .footer .social-links a {
+            margin: 0 1rem;
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer .social-links a:hover {
+            color: #fff;
+        }
+        .footer .social-links svg {
+            width: 24px;
+            height: 24px;
+        }
+        .footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .image-box img {
+                height: 180px;
+                width: 280px;
+            }
+            .image-box span {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section">
+        <div class="bg-carousel swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2070" alt="Background Image 1"></div>
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2070" alt="Background Image 2"></div>
+
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=2070" alt="Background Image 4"></div>
+            </div>
+        </div>
+        <div id="pyramid-title" class="animated-title"></div>
+    </div>
+
+    <section class="marquee-section">
+        <div class="marquee-wrapper">
+            <div class="marquee">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800" alt="Pizza">
+                    <span>Gourmet Pizza</span>
+                </div>
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800" alt="Cake">
+                    <span>Decadent Desserts</span>
+                </div>
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800" alt="Salad">
+                    <span>Fresh Salads</span>
+                </div>
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800" alt="Grill">
+                    <span>Sizzling Grill</span>
+                </div>
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800" alt="Healthy Bowl">
+                    <span>Healthy Bowls</span>
+                </div>
+                 <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800" alt="Pasta">
+                    <span>Artisanal Pasta</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Testimonials Section -->
+    <section class="testimonials-section">
+        <h2 class="section-title" data-animate>What Our Guests Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card" data-animate>
+                <p>"An absolutely unforgettable experience. The flavors were sublime and the presentation was a work of art. We will be back!"</p>
+                <span class="author">- Alex Johnson</span>
+            </div>
+            <div class="testimonial-card" data-animate>
+                <p>"From the moment we walked in, the service was impeccable. Every dish that came to our table was a delightful surprise."</p>
+                <span class="author">- Samantha Lee</span>
+            </div>
+            <div class="testimonial-card" data-animate>
+                <p>"The best meal I've had in years. 'Taste Greatness' isn't just a name, it's a promise they deliver on. Highly recommended."</p>
+                <span class="author">- Michael Chen</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Footer -->
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#" title="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="#" title="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="#" title="Twitter">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+            </a>
+        </div>
+        <p>123 Culinary Lane, Flavor Town, 12345</p>
+        <p>(123) 456-7890</p>
+        <p>&copy; 2024 Taste Greatness. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pyramidTitle = document.getElementById('pyramid-title');
+            if (!pyramidTitle) return;
+
+            const bgSwiper = new Swiper('.bg-carousel', {
+                loop: true,
+                effect: 'fade',
+                fadeEffect: { crossFade: true },
+                autoplay: { delay: 4000, disableOnInteraction: false },
+                allowTouchMove: false,
+                speed: 1000,
+            });
+
+            const text = 'TASTE GREATNESS';
+            
+            function createPyramidText() {
+                pyramidTitle.innerHTML = '';
+                for (let i = 1; i <= text.length; i++) {
+                    const line = document.createElement('div');
+                    line.className = 'line';
+                    const lineText = text.substring(0, i);
+                    lineText.split('').forEach((letter) => {
+                        const letterContainer = document.createElement('span');
+                        letterContainer.className = 'letter-container';
+                        const letterSpan = document.createElement('span');
+                        letterSpan.className = 'letter';
+                        letterSpan.innerHTML = letter === ' ' ? '&nbsp;' : letter;
+                        letterContainer.appendChild(letterSpan);
+                        line.appendChild(letterContainer);
+                    });
+                    pyramidTitle.appendChild(line);
+                }
+            }
+
+            function animatePyramidText() {
+                const letters = document.querySelectorAll('.letter');
+                letters.forEach((letter, index) => {
+                    setTimeout(() => {
+                        letter.classList.add('animate');
+                    }, index * 50);
+                });
+            }
+
+            function handleTextMerging() {
+                const lines = document.querySelectorAll('.line');
+                const scrollY = window.scrollY;
+                const heroHeight = document.querySelector('.hero-section').offsetHeight;
+                const scrollProgress = Math.min(scrollY / (heroHeight * 0.8), 1);
+                
+                lines.forEach((line, index) => {
+                    if (index === lines.length - 1) return;
+                    const mergeStart = index / (lines.length - 1);
+                    const mergeProgress = Math.max(0, Math.min(1, (scrollProgress - mergeStart) * (lines.length - 1)));
+                    
+                    if (mergeProgress > 0) {
+                        const moveDistance = mergeProgress * 1.2;
+                        line.style.transform =' translateY(${moveDistance}em)';
+                        line.style.opacity = Math.max(0, 1 - mergeProgress);
+                    } else {
+                        line.style.transform = 'translateY(0)';
+                        line.style.opacity = '1';
+                    }
+                });
+            }
+
+            function setupMarquee() {
+                const marquee = document.querySelector('.marquee');
+                if (marquee) {
+                    const marqueeContent = Array.from(marquee.children);
+                    marqueeContent.forEach(item => {
+                        const duplicatedItem = item.cloneNode(true);
+                        marquee.appendChild(duplicatedItem);
+                    });
+                }
+            }
+            
+            // --- NEW: Animation for new sections ---
+            function observeElements() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.transitionDelay =' ${index * 100}ms';
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('[data-animate]').forEach(el => {
+                    observer.observe(el);
+                });
+            }
+
+            // --- Initialize Everything ---
+            createPyramidText();
+            setTimeout(() => { animatePyramidText(); }, 500);
+            setupMarquee();
+            observeElements(); // Initialize the observer for the new sections
+            window.addEventListener('scroll', handleTextMerging);
+        });
+    </script>
+
+</body>
+</html>

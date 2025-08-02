@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meet Our Team | The API-tizer Café</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fceabb, #f8b500);
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #5d2800;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      color: #7a4900;
+    }
+
+    .team-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .member-wrapper {
+      position: relative;
+      text-align: center;
+    }
+
+    .member-basic {
+      padding: 15px 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: 0.3s ease;
+      cursor: pointer;
+      min-width: 200px;
+    }
+
+    .member-basic h3 {
+      font-size: 20px;
+      color: #333;
+    }
+
+    .member-basic .role {
+      font-size: 15px;
+      color: #d35400;
+    }
+
+    .profile-hover-card {
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 240px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.4s ease;
+      z-index: 10;
+    }
+
+    .member-wrapper:hover .profile-hover-card {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .profile-hover-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #d35400;
+      margin-bottom: 10px;
+    }
+
+    .profile-hover-card p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .socials a {
+      font-size: 18px;
+      color: #d35400;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .socials a:hover {
+      color: #222;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .profile-hover-card {
+        width: 90vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Meet Our Team</h1>
+  <p class="subtitle">Hover over their names to see the heart behind our café</p>
+
+  <div class="team-container">
+
+    <!-- Woman 1 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Sara Beans</h3>
+        <div class="role">Head Barista</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=47" alt="Sara Beans">
+        <p>Sara crafts the finest espresso shots and latte art you’ll love.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 2 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Elena Mocha</h3>
+        <div class="role">Pastry Chef</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=49" alt="Elena Mocha">
+        <p>Behind our croissants, cakes & tarts. Elena is a baking magician.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Man 1 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Tom Roast</h3>
+        <div class="role">Kitchen Lead</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=12" alt="Tom Roast">
+        <p>Creates our signature grilled sandwiches and hearty meals.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 3 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Lina Brew</h3>
+        <div class="role">Café Manager</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=50" alt="Lina Brew">
+        <p>Lina keeps our café running smooth and our guests smiling.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 4 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Aisha Latte</h3>
+        <div class="role">Customer Experience</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=48" alt="Aisha Latte">
+        <p>Ensures every guest has a warm, welcoming experience. She remembers your name!</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 5 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Joe Beans</h3>
+        <div class="role">Beverage Artist</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=52" alt="Nina Beans">
+        <p>Mixes and matches flavors for refreshing coolers and mocktails.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Man 2 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Jake Williams</h3>
+        <div class="role">Delivery Lead</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=13" alt="Jake Bean">
+        <p>Jake makes sure your coffee reaches you hot and fresh.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 6 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Maya Cream</h3>
+        <div class="role">Social Media</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=53" alt="Maya Cream">
+        <p>Maya crafts posts that keep our followers engaged and craving.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Man 3 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Leo Brewster</h3>
+        <div class="role">Operations Head</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=14" alt="Leo Brewster">
+        <p>Leo ensures supplies, staff, and flow run like a well-poured cappuccino.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Woman 7 -->
+    <div class="member-wrapper">
+      <div class="member-basic">
+        <h3>Ruby Roast</h3>
+        <div class="role">Cashier & Host</div>
+      </div>
+      <div class="profile-hover-card">
+        <img src="https://i.pravatar.cc/100?img=54" alt="Ruby Roast">
+        <p>Ruby greets you with a smile and handles every order with care.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
