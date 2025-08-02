@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API-tizer - Our Story</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%; /* Ensure html and body take full viewport height */
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .header.dark {
+            background: rgba(20, 15, 10, 0.95);
+            color: #f5f3f0;
+        }
+
+        .header.light {
+            background: rgba(255, 250, 245, 0.95);
+            color: #2c1810;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header.dark .nav-link {
+            color: #f5f3f0;
+        }
+
+        .header.light .nav-link {
+            color: #2c1810;
+        }
+
+        .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .nav-link.active {
+            border-bottom: 2px solid #d4734b;
+            padding-bottom: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cta-button {
+            background: #d4734b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 115, 75, 0.4);
+            background: #c56642;
+        }
+
+        /* Page Styles */
+        .page {
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            position: relative;
+        }
+
+        /* Story Page Styles */
+        .story-page {
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
+            color: #f5f3f0;
+            /* padding-top will be set by JS */
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 0;
+            position: relative;
+        }
+
+        .story-page::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(45deg, transparent 0%, transparent 40%, #2c1810 40%, #2c1810 60%, transparent 60%);
+            background-size: 20px 20px;
+        }
+
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 0;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: bold;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            color: #f5f3f0;
+            font-family: 'Georgia', serif;
+        }
+
+        .cuisine-note {
+            color: #d4734b;
+            font-size: 1.2em;
+            margin-left: 10px;
+        }
+
+        .taste-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #f5f3f0;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 40px 0 80px 0;
+            transition: all 0.3s ease;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .taste-link:hover {
+            color: #d4734b;
+            transform: translateX(10px);
+        }
+
+        .taste-icon {
+            width: 0;
+            height: 0;
+            border-left: 12px solid currentColor;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        /* Specialty Grid */
+        .specialty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .specialty-card {
+            background: #f5f3f0;
+            padding: 25px 25px 70px 25px;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .specialty-card:nth-child(1) { transform: rotate(-2deg); }
+        .specialty-card:nth-child(2) { transform: rotate(1deg); }
+        .specialty-card:nth-child(3) { transform: rotate(-1deg); }
+        .specialty-card:nth-child(4) { transform: rotate(2deg); }
+
+        .specialty-card:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+
+        .specialty-card::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: rgba(212, 115, 75, 0.1);
+            border-radius: 12px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .specialty-card:hover::before {
+            opacity: 1;
+        }
+
+        .specialty-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .specialty-card:nth-child(1) .specialty-image {
+            background: linear-gradient(135deg, #ff6b35 0%, #d4734b 100%);
+        }
+
+        .specialty-card:nth-child(2) .specialty-image {
+            background: linear-gradient(135deg, #6a994e 0%, #a7c957 100%);
+        }
+
+        .specialty-card:nth-child(3) .special-image {
+            background: linear-gradient(135deg, #8d5524 0%, #d2691e 100%);
+        }
+
+        .specialty-card:nth-child(4) .specialty-image {
+            background: linear-gradient(135deg, #8e44ad 0%, #c39bd3 100%);
+        }
+
+        .specialty-title {
+            color: #2c1810;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-family: 'Georgia', serif;
+        }
+
+        .specialty-origin {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .specialty-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .specialty-tag {
+            background: #d4734b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .specialty-sticker {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #2ecc71;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            transform: rotate(15deg);
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* About Us Page */
+        .about-us {
+            background: #f5f3f0;
+            color: #2c1810;
+            /* padding-top will be set by JS */
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Changed to column to stack content */
+            align-items: center;
+            justify-content: flex-start; /* Align to start of flex container */
+            box-sizing: border-box;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+            width: 100%;
+        }
+
+        .about-header {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .about-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: bold;
+            line-height: 0.9;
+            color: #2c1810;
+            font-family: 'Georgia', serif;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .animated-sticker {
+            background: #d4734b;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transform: rotate(-8deg);
+            animation: gentleFloat 3s ease-in-out infinite;
+            white-space: nowrap;
+            font-family: 'Arial', sans-serif;
+            flex-shrink: 0;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+
+        .about-description {
+            max-width: 600px;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #4a3426;
+            margin: 0 auto 40px auto; /* Added bottom margin for spacing */
+            font-family: 'Georgia', serif;
+        }
+
+        /* New: About Us Image Grid Styles */
+        .about-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding-bottom: 40px; /* Ensure space below grid */
+        }
+
+        .about-image-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            aspect-ratio: 1 / 1; /* Force square aspect ratio */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .about-image-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-overlay-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            color: white;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Transition Overlay */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .splash-shape-1, .splash-shape-2 {
+            position: absolute;
+            background: #d4734b;
+            transform-origin: center;
+        }
+
+        .splash-shape-1 {
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+
+        .splash-shape-2 {
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+        }
+
+        .transition-overlay.expand .splash-shape-1 {
+            animation: expandFromBottomRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .transition-overlay.expand .splash-shape-2 {
+            animation: expandFromTopLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.1s;
+        }
+
+        .transition-overlay.contract .splash-shape-1 {
+            animation: contractToBottomRight 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+        }
+
+        .transition-overlay.contract .splash-shape-2 {
+            animation: contractToTopLeft 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards 0.1s;
+        }
+
+        @keyframes expandFromBottomRight {
+            0% {
+                width: 0;
+                height: 0;
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            50% {
+                width: 80vw;
+                height: 80vh;
+                border-radius: 50% 30% 40% 60% / 40% 60% 50% 30%;
+            }
+            100% {
+                width: 120vw;
+                height: 120vh;
+                border-radius: 30% 70% 60% 40% / 70% 40% 30% 60%;
+                transform: translate(-20vw, -20vh);
+            }
+        }
+
+        @keyframes expandFromTopLeft {
+            0% {
+                width: 0;
+                height: 0;
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+            }
+            50% {
+                width: 70vw;
+                height: 70vh;
+                border-radius: 60% 40% 30% 70% / 30% 70% 60% 40%;
+            }
+            100% {
+                width: 120vw;
+                height: 120vh;
+                border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+                transform: translate(-10vw, -10vh);
+            }
+        }
+
+        @keyframes contractToBottomRight {
+            0% {
+                width: 120vw;
+                height: 120vh;
+                border-radius: 30% 70% 60% 40% / 70% 40% 30% 60%;
+                transform: translate(-20vw, -20vh);
+            }
+            50% {
+                width: 60vw;
+                height: 60vh;
+                border-radius: 50% 30% 40% 60% / 40% 60% 50% 30%;
+                transform: translate(0, 0);
+            }
+            100% {
+                width: 0;
+                height: 0;
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: translate(0, 0);
+            }
+        }
+
+        @keyframes contractToTopLeft {
+            0% {
+                width: 120vw;
+                height: 120vh;
+                border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+                transform: translate(-10vw, -10vh);
+            }
+            50% {
+                width: 50vw;
+                height: 50vh;
+                border-radius: 60% 40% 30% 70% / 30% 70% 60% 40%;
+                transform: translate(0, 0);
+            }
+            100% {
+                width: 0;
+                height: 0;
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+                transform: translate(0, 0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-center {
+                gap: 20px;
+            }
+
+            .nav-link {
+                font-size: 12px;
+            }
+
+            .story-page,             .about-us {
+                padding: 80px 20px 40px;
+            }
+
+            .about-container {
+                margin: 20px auto 0;
+            }
+
+            .specialty-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .about-description {
+                margin-left: 0;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header dark" id="header">
+        <div class="logo">API-TIZER</div>
+        <nav class="nav-center">
+            <a href="#" class="nav-link" data-page="about-us">OUR STORY</a>
+            <a href="#" class="nav-link" data-page="story-page">SPECIALTIES</a>
+            <a href="#" class="nav-link">MENU</a>
+        </nav>
+        <div class="nav-right">
+            <a href="#" class="nav-link">LOCATION</a>
+            <button class="cta-button">BOOK TABLE</button>
+        </div>
+    </header>
+
+    <!-- Story/Specialties Page -->
+    <div class="page story-page active" id="story-page">
+        <div class="hero-section">
+            <h1 class="hero-title">
+                Chef's passion, authentic flavors, culinary magic.<span class="cuisine-note">🍽️</span>
+            </h1>
+            
+            <a href="#" class="taste-link">
+                <div class="taste-icon"></div>
+                TASTE OUR SIGNATURE DISHES
+            </a>
+
+            <div class="specialty-grid">
+                <div class="specialty-card">
+                    <div class="specialty-image">
+                        <img src="https://themeatmen.sg/wp-content/uploads/2023/08/DSC00410_small-scaled-1.jpg.webp" alt="Truffle Carbonara" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/F0F0F0/333333?text=Truffle+Carbonara';">
+                    </div>
+                    <h3 class="specialty-title">Truffle Carbonara</h3>
+                    <p class="specialty-origin">Italian Tradition</p>
+                    <div class="specialty-tags">
+                        <span class="specialty-tag">HANDMADE</span>
+                        <span class="specialty-tag">SIGNATURE</span>
+                    </div>
+                    <div class="specialty-sticker">BESTSELLER</div>
+                </div>
+
+                <div class="specialty-card">
+                    <div class="specialty-image">
+                    <img src="https://imgs.search.brave.com/cKg0z8STmMV4Qvb6tc0FSUI1LFoDOdzZhCcGKXsUlPk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ydW5u/aW5nb25yZWFsZm9v/ZC5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMDMvaGVh/bHRoeS12ZWdhbi1r/YWxlLXN3ZWV0LXBv/dGF0by1jaGlja3Bl/YS1oYXJ2ZXN0LWJv/d2wtcmVjaXBlLTYu/anBn" alt="Garden Harvest Bowl" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/F0F0F0/333333?text=Garden+Harvest+Bowl';">
+                    </div>
+                    <h3 class="specialty-title">Garden Harvest Bowl</h3>
+                    <p class="specialty-origin">Local Ingredients</p>
+                    <div class="specialty-tags">
+                        <span class="specialty-tag">ORGANIC</span>
+                        <span class="specialty-tag">SEASONAL</span>
+                    </div>
+                </div>
+
+                <div class="specialty-card">
+                    <div class="specialty-image">
+                    <img src="https://imgs.search.brave.com/ETweiPfGsr0JhIyNGSjgsLU4eVoG6hMYJ3IGSxmIrXo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9oaXBz/LmhlYXJzdGFwcHMu/Y29tL2htZy1wcm9k/L2ltYWdlcy9kZWxp/c2gtMTkxMDE2LXNs/b3ctY29va2VyLXNo/b3J0LXJpYnMtMDA3/MC1wb3J0cmFpdC1w/Zi0xNjYxODc4NTIz/LmpwZz9jcm9wPTAu/ODUyeHc6MC41Njd4/aDswLjAwMzQweHcs/MC4xMTZ4aCZyZXNp/emU9OTgwOio" alt="48-Hour Short Ribs" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/F0F0F0/333333?text=48-Hour+Short+Ribs';">    
+                    </div>
+                    <h3 class="specialty-title">48-Hour Short Ribs</h3>
+                    <p class="specialty-origin">Chef's Special</p>
+                    <div class="specialty-tags">
+                        <span class="specialty-tag">PREMIUM</span>
+                        <span class="specialty-tag">TENDER</span>
+                    </div>
+                    <div class="specialty-sticker">AWARD WINNER</div>
+                </div>
+
+                <div class="specialty-card">
+                    <div class="specialty-image">
+                        <img src="https://imgs.search.brave.com/5nvwMJcguI3WUO0LZMT4sInGTGafssyBNZM4L2S_1fk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA3Lzc5LzY5LzU4/LzM2MF9GXzc3OTY5/NTg5Nl9CdEJHOHBw/dlVjaEREd0o5TXFQ/dzZuTFhHQ3hTTEF3/ay5qcGc" alt="Lavender Crème Brûlée" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/F0F0F0/333333?text=Lavender+Cr%C3%A8me+Br%C3%BBl%C3%A9e';">
+                    </div>
+                    <h3 class="specialty-title">Lavender Crème Brûlée</h3>
+                    <p class="specialty-origin">House Dessert</p>
+                    <div class="specialty-tags">
+                        <span class="specialty-tag">ARTISAN</span>
+                        <span class="specialty-tag">FLORAL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Page -->
+    <div class="page about-us" id="about-us">
+        <div class="about-container">
+            <div class="about-header">
+                <h1 class="about-title">Our<br>story</h1>
+                <div class="animated-sticker">EST. 2018</div>
+            </div>
+            
+            <div class="about-description">
+                <p>Born from a passion for authentic flavors and culinary artistry, API-tizer began as a dream to create unforgettable dining experiences. Our journey started in a small kitchen, where every recipe was crafted with love and perfected through countless tastings.</p>
+                
+                <p style="margin-top: 25px;">Today, we continue that tradition by sourcing the finest local ingredients, honoring time-tested cooking techniques, and constantly innovating to surprise and delight our guests. Every dish tells a story of tradition, creativity, and the joy of sharing exceptional food.</p>
+
+                <p style="margin-top: 25px;">From our family to yours, we invite you to be part of our culinary story and create delicious memories that will last a lifetime.</p>
+            </div>
+
+            <!-- New: Images Section for Our Story -->
+            <div class="about-image-grid">
+                <div class="about-image-item">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Restaurant Interior" onerror="this.onerror=null;this.src='https://placehold.co/250x250/F0F0F0/333333?text=Interior';">
+                    <div class="image-overlay-text">Our Ambiance</div>
+                </div>
+                <div class="about-image-item">
+                    <img src="https://imgs.search.brave.com/TayXp0QRQbYbJwOQNmtr17RNc79qfpvq_sbWVqCDX-g/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTQw/OTcyOTk5Mi9waG90/by9oZWN0aWMtY29v/a3Mtd29ya2luZy1p/bi1hLWJ1c3ktY29t/bWVyY2lhbC1raXRj/aGVuLWF0LWEtcmVz/dGF1cmFudC5qcGc_/cz02MTJ4NjEyJnc9/MCZrPTIwJmM9QXFI/eVJhbjVHeGNGZ1o3/cWJrZVk3SU9NX0RO/c01VdWoyUnJuR1h2/TUYyTT0" alt="Chef Cooking" onerror="this.onerror=null;this.src='https://placehold.co/250x250/F0F0F0/333333?text=Chef+at+Work';">
+                    <div class="image-overlay-text">Our Passion</div>
+                </div>
+                <div class="about-image-item">
+                    <img src="https://imgs.search.brave.com/9CfJ3DAJccNri4MrxB27BrbNNJqnT8N9t8sHTfrkSRc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzYv/MDg4Lzc0My9zbWFs/bC9haS1nZW5lcmF0/ZWQtZnJlc2gtaW5n/cmVkaWVudHMtcmVh/ZHktZm9yLWhlYWx0/aHktY29va2luZy1w/aG90by5qcGc">
+                    <div class="image-overlay-text">Fresh Ingredients</div>
+                </div>
+                <div class="about-image-item">
+                    <img src="https://plus.unsplash.com/premium_photo-1670604403226-670baa641372?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Plated Dish" onerror="this.onerror=null;this.src='https://placehold.co/250x250/F0F0F0/333333?text=Plated+Dish';">
+                    <div class="image-overlay-text">Culinary Art</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transition Overlay -->
+    <div class="transition-overlay" id="transitionOverlay">
+        <div class="splash-shape-1"></div>
+        <div class="splash-shape-2"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        class RestaurantSPA {
+            constructor() {
+                this.currentPage = 'story-page';
+                this.isTransitioning = false;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateActiveStates();
+                this.adjustPagePadding(); // Call on init
+                window.addEventListener('resize', this.adjustPagePadding.bind(this)); // Call on resize
+            }
+
+            adjustPagePadding() {
+                const headerHeight = document.getElementById('header').offsetHeight;
+                document.getElementById('story-page').style.paddingTop = `${headerHeight + 20}px`; // Add a little extra space
+                document.getElementById('about-us').style.paddingTop = `${headerHeight + 20}px`; // Add a little extra space
+            }
+
+            bindEvents() {
+                // Navigation links
+                document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetPage = link.getAttribute('data-page');
+                        if (targetPage && targetPage !== this.currentPage && !this.isTransitioning) {
+                            this.transitionToPage(targetPage);
+                        }
+                    });
+                });
+
+                // Book Table Button functionality
+                document.querySelector('.cta-button').addEventListener('click', () => {
+                    alert('Table reservation system would open here! This could redirect to a booking platform or show a reservation form.');
+                });
+
+                // Taste signature dishes functionality
+                document.querySelector('.taste-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('This would showcase our signature dishes with beautiful photos and detailed descriptions, or redirect to the menu page.');
+                });
+
+                // Specialty card interactions
+                document.querySelectorAll('.specialty-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const title = card.querySelector('.specialty-title').textContent;
+                        alert(`Learning more about: ${title}. This would show detailed information about the dish, ingredients, preparation method, and pricing.`);
+                    });
+                });
+
+                // Menu link functionality
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    if (link.textContent.trim() === 'MENU' && !link.hasAttribute('data-page')) {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            alert('This would redirect to your existing menu page!');
+                        });
+                    }
+                });
+
+                // Location link functionality
+                document.querySelectorAll('.nav-right .nav-link').forEach(link => {
+                    if (!link.hasAttribute('data-page')) {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            alert('This would show restaurant location, contact info, hours, and directions.');
+                        });
+                    }
+                });
+            }
+
+            transitionToPage(targetPage) {
+                if (this.isTransitioning) return;
+                
+                this.isTransitioning = true;
+                const overlay = document.getElementById('transitionOverlay');
+                
+                // Phase 1: Expand shapes from corners
+                overlay.classList.add('expand');
+                
+                // Phase 2: Change content when screen is fully covered (700ms)
+                setTimeout(() => {
+                    this.switchPageContent(targetPage);
+                    
+                    // Remove expand class and add contract class
+                    overlay.classList.remove('expand');
+                    overlay.classList.add('contract');
+                }, 700);
+                
+                // Phase 3: Clean up after contract animation completes (1400ms total)
+                setTimeout(() => {
+                    overlay.classList.remove('contract');
+                    this.isTransitioning = false;
+                }, 1400);
+            }
+
+            switchPageContent(targetPage) {
+                // Hide current page
+                document.getElementById(this.currentPage).classList.remove('active');
+                
+                // Show target page
+                const newPage = document.getElementById(targetPage);
+                newPage.classList.add('active');
+                // Reset scroll position for the new page
+                newPage.scrollTop = 0; 
+                
+                // Update current page
+                this.currentPage = targetPage;
+                
+                // Update header theme and active states
+                this.updateHeaderTheme();
+                this.updateActiveStates();
+            }
+
+            updateHeaderTheme() {
+                const header = document.getElementById('header');
+                header.className = this.currentPage === 'story-page' ? 'header dark' : 'header light';
+            }
+
+            updateActiveStates() {
+                // Remove all active states
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active state to current page link
+                const activeLink = document.querySelector(`[data-page="${this.currentPage}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        }
+
+        // Initialize the SPA when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new RestaurantSPA();
+        });
+
+        // Add some interactive hover effects
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scroll behavior for better UX
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Add cursor pointer to interactive elements
+            document.querySelectorAll('.specialty-card, .nav-link, .cta-button, .taste-link').forEach(el => {
+                el.style.cursor = 'pointer';
+            });
+
+            // Add subtle parallax effect - removed the problematic scroll effect
+            // Simple hover enhancement instead
+            const cards = document.querySelectorAll('.specialty-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transition = 'all 0.3s ease';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
