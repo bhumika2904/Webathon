@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Food Menu UI</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.css">
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom styles for Swiper pagination */
+        .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.6);
+            opacity: 1;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: #ffffff;
+            transform: scale(1.2);
+        }
+
+        /* Ensure Swiper takes full height */
+        .grid-item .swiper {
+            height: 100%;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        /* Sophisticated geometric background */
+        .geometric-bg {
+            background: 
+                /* Primary gradient base - more defined */
+                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 15%, #cbd5e1 30%, #e2e8f0 45%, #f1f5f9 60%, #e2e8f0 75%, #f8fafc 100%),
+                /* Enhanced radial overlays with more opacity */
+                radial-gradient(circle at 20% 30%, rgba(139, 114, 90, 0.15) 0%, rgba(139, 114, 90, 0.05) 30%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 35%, transparent 65%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.10) 0%, rgba(16, 185, 129, 0.03) 40%, transparent 70%),
+                radial-gradient(circle at 90% 70%, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.02) 45%, transparent 75%);
+            background-size: 100% 100%, 600px 600px, 500px 500px, 400px 400px, 350px 350px;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Dynamic grid pattern overlay - more visible */
+        .grid-pattern {
+            position: relative;
+        }
+
+        .grid-pattern::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                /* Fine grid pattern - more visible */
+                linear-gradient(rgba(139, 114, 90, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 114, 90, 0.15) 1px, transparent 1px),
+                /* Diagonal lines for texture - enhanced */
+                linear-gradient(45deg, transparent 47%, rgba(139, 114, 90, 0.06) 48%, rgba(139, 114, 90, 0.06) 52%, transparent 53%),
+                linear-gradient(-45deg, transparent 47%, rgba(59, 130, 246, 0.05) 48%, rgba(59, 130, 246, 0.05) 52%, transparent 53%),
+                /* Additional crosshatch pattern */
+                linear-gradient(30deg, transparent 45%, rgba(16, 185, 129, 0.04) 46%, rgba(16, 185, 129, 0.04) 54%, transparent 55%);
+            background-size: 
+                20px 20px,
+                20px 20px,
+                80px 80px,
+                80px 80px,
+                120px 120px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* Animated floating elements - more prominent */
+        .grid-pattern::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                /* Larger, more visible dots */
+                radial-gradient(circle at 15% 15%, rgba(139, 114, 90, 0.18) 3px, transparent 4px),
+                radial-gradient(circle at 85% 25%, rgba(59, 130, 246, 0.15) 2px, transparent 3px),
+                radial-gradient(circle at 25% 85%, rgba(16, 185, 129, 0.12) 2.5px, transparent 3.5px),
+                radial-gradient(circle at 75% 75%, rgba(245, 158, 11, 0.10) 2px, transparent 3px),
+                /* Additional medium dots */
+                radial-gradient(circle at 50% 10%, rgba(139, 114, 90, 0.08) 1.5px, transparent 2px),
+                radial-gradient(circle at 10% 60%, rgba(59, 130, 246, 0.06) 1px, transparent 1.5px),
+                radial-gradient(circle at 90% 40%, rgba(16, 185, 129, 0.05) 1px, transparent 1.5px);
+            background-size: 120px 120px, 150px 150px, 140px 140px, 130px 130px, 200px 200px, 180px 180px, 160px 160px;
+            animation: floatBackground 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Enhanced floating animation */
+        @keyframes floatBackground {
+            0%, 100% { 
+                transform: translateX(0) translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translateX(15px) translateY(-20px) rotate(2deg);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: translateX(-8px) translateY(-15px) rotate(-1deg);
+                opacity: 0.8;
+            }
+            75% { 
+                transform: translateX(-15px) translateY(8px) rotate(1deg);
+                opacity: 1;
+            }
+        }
+
+        /* Hover effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #8b725a;
+            border-radius: 3px;
+        }
+
+        /* Smooth image loading */
+        img {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Enhanced glassmorphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* Floating cards effect */
+        .floating-card {
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .floating-card:nth-child(2n) {
+            animation-delay: -2s;
+        }
+
+        .floating-card:nth-child(3n) {
+            animation-delay: -4s;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% { 
+                transform: translateY(-10px) rotate(0.5deg);
+            }
+        }
+
+        /* Organic shapes background - more visible */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse 600px 450px at 20% 30%, rgba(139, 114, 90, 0.12) 0%, rgba(139, 114, 90, 0.04) 40%, transparent 80%),
+                radial-gradient(ellipse 450px 600px at 80% 20%, rgba(59, 130, 246, 0.10) 0%, rgba(59, 130, 246, 0.03) 45%, transparent 85%),
+                radial-gradient(ellipse 350px 500px at 60% 80%, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 50%, transparent 90%),
+                radial-gradient(ellipse 280px 350px at 90% 70%, rgba(245, 158, 11, 0.06) 0%, rgba(245, 158, 11, 0.02) 55%, transparent 95%),
+                /* Additional smaller organic shapes */
+                radial-gradient(ellipse 200px 300px at 10% 90%, rgba(139, 114, 90, 0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 150px 200px at 95% 10%, rgba(59, 130, 246, 0.04) 0%, transparent 75%);
+            animation: organicMove 30s linear infinite;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* Enhanced organic movement */
+        @keyframes organicMove {
+            0% { transform: rotate(0deg) scale(1); opacity: 0.8; }
+            25% { transform: rotate(90deg) scale(1.05); opacity: 0.9; }
+            50% { transform: rotate(180deg) scale(0.95); opacity: 1; }
+            75% { transform: rotate(270deg) scale(1.02); opacity: 0.85; }
+            100% { transform: rotate(360deg) scale(1); opacity: 0.8; }
+        }
+
+        /* Additional texture layer */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                /* Subtle noise texture */
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(139, 114, 90, 0.02) 2px,
+                    rgba(139, 114, 90, 0.02) 4px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(59, 130, 246, 0.015) 2px,
+                    rgba(59, 130, 246, 0.015) 4px
+                );
+            pointer-events: none;
+            z-index: -3;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased geometric-bg grid-pattern">
+
+    <!-- Trust Badges Section -->
+    <section class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center p-6 glass-effect rounded-2xl hover-lift floating-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-slate-800">Freshness Guaranteed</h3>
+                <p class="text-slate-600 text-sm">Only the finest ingredients for your plate.</p>
+            </div>
+            <div class="text-center p-6 glass-effect rounded-2xl hover-lift floating-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-slate-800">Fast Delivery</h3>
+                <p class="text-slate-600 text-sm">Your delicious meal, delivered swiftly to your door.</p>
+            </div>
+            <div class="text-center p-6 glass-effect rounded-2xl hover-lift floating-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-slate-800">Secure Ordering</h3>
+                <p class="text-slate-600 text-sm">Safe and easy payment options for every order.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotional Banners Section -->
+    <section class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative rounded-2xl overflow-hidden h-96 hover-lift" data-aos="fade-right">
+                <img src="https://images.unsplash.com/photo-1673551494394-23b13e77e58b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sweet Treats" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1964x1964/FFDDC1/333333?text=Sweet+Treats';">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/30 to-transparent"></div>
+                <div class="absolute inset-0 p-8 text-white flex flex-col justify-end">
+                    <h2 class="text-4xl font-bold mb-2">Sweet Treats Await!</h2>
+                    <p class="text-lg bg-white/20 backdrop-blur-sm inline-block px-3 py-1 rounded-full w-fit">Desserts from $8</p>
+                </div>
+            </div>
+            <div class="relative rounded-2xl overflow-hidden h-96 hover-lift" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Gourmet Burger" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1974x1974/D1E7DD/333333?text=Gourmet+Burger';">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/30 to-transparent"></div>
+                <div class="absolute inset-0 p-8 text-white flex flex-col justify-end">
+                    <h2 class="text-4xl font-bold mb-2">Juicy Burgers & More!</h2>
+                    <p class="text-lg bg-white/20 backdrop-blur-sm inline-block px-3 py-1 rounded-full w-fit">Burgers starting from $15</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-4xl font-bold mb-4 text-slate-800" data-aos="fade-up">Culinary Delights Await!</h2>
+            <p class="text-base text-slate-600 leading-relaxed" data-aos="fade-up" data-aos-delay="100">Dive into our exquisite selection of dishes, crafted with passion and the freshest ingredients to tantalize your taste buds.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Main Slider Item -->
+            <div class="grid-item lg:col-span-2 sm:row-span-2 lg:row-span-2 rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="zoom-in-up">
+                <div class="swiper main-slider h-full">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="https://plus.unsplash.com/premium_photo-1677000666741-17c3c57139a2?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fresh Salad Bowl" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/2070x2070/C1DCDC/333333?text=Fresh+Salad+Bowl';">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Delicious Dish" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/2070x2070/E0C1DD/333333?text=Delicious+Dish';">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://images.unsplash.com/photo-1613564834361-9436948817d1?q=80&w=2686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Delicious Pasta" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/2070x2070/C1DDE0/333333?text=Delicious+Pasta';">
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <!-- Spicy Noodles Item -->
+            <div class="grid-item rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://plus.unsplash.com/premium_photo-1661432484710-90bd17326a97?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Spicy Noodles" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1974x1974/DDC1E0/333333?text=Spicy+Noodles';">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                    <div class="text-lg font-semibold">Spicy Noodles</div>
+                    <div class="text-sm opacity-90">$12</div>
+                </div>
+            </div>
+
+            <!-- Freshly Baked Bread Item -->
+            <div class="grid-item rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1686431985100-a31cb343bce9?q=80&w=1325&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Freshly Baked Bread" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1974x1974/E0DDC1/333333?text=Freshly+Baked+Bread';">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                    <div class="text-lg font-semibold">Artisan Bread</div>
+                    <div class="text-sm opacity-90">$6</div>
+                </div>
+            </div>
+
+            <!-- CTA Tile - Order Now -->
+            <div class="grid-item flex flex-col items-center justify-center p-8 rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                    <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <h3 class="m-0 mb-4 text-xl font-semibold text-center text-slate-800">Ready to Order?</h3>
+                <button class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">ORDER NOW</button>
+            </div>
+
+            <!-- Colorful Smoothies Item with Price Overlay -->
+            <div class="grid-item rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Colorful Smoothies" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1965x1965/DDE0C1/333333?text=Colorful+Smoothies';">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                    <div class="text-lg font-semibold">Refreshing Smoothies</div>
+                    <div class="text-sm opacity-90">Starting from $7</div>
+                </div>
+            </div>
+
+            <!-- Assorted Pastries Item -->
+            <div class="grid-item lg:col-span-1 rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="zoom-in-up" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1606716809549-b0266c29c8c2?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Assorted Pastries" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1974x1974/C1E0DD/333333?text=Assorted+Pastries';">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                    <div class="text-lg font-semibold">Fresh Pastries</div>
+                    <div class="text-sm opacity-90">From $5</div>
+                </div>
+            </div>
+
+            <!-- Coffee & Beverages Carousel -->
+            <div class="grid-item lg:col-span-1 rounded-2xl overflow-hidden glass-effect relative aspect-square min-h-0 hover-lift" data-aos="zoom-in-up" data-aos-delay="200">
+                <div class="swiper coffee-slider h-full">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide relative">
+                            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Artisan Coffee" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                                <div class="text-lg font-semibold">Artisan Coffee</div>
+                                <div class="text-sm opacity-90">$4.50</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide relative">
+                            <img src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aGVyYmFsJTIwdGVhfGVufDB8fDB8fHww" alt="Herbal Tea" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                                <div class="text-lg font-semibold">Herbal Tea</div>
+                                <div class="text-sm opacity-90">$3.25</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide relative">
+                            <img src="https://plus.unsplash.com/premium_photo-1697648334184-8b8cfb3ccfd0?q=80&w=812&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Hot Chocolate" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white p-4 pt-8">
+                                <div class="text-lg font-semibold">Hot Chocolate</div>
+                                <div class="text-sm opacity-90">$4.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize Swiper for the main slider
+            const mainSlider = new Swiper('.main-slider', {
+                loop: true,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.main-slider .swiper-pagination',
+                    clickable: true,
+                },
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true
+                },
+                speed: 800,
+            });
+
+            // Initialize Swiper for the coffee slider
+            const coffeeSlider = new Swiper('.coffee-slider', {
+                loop: true,
+                autoplay: {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.coffee-slider .swiper-pagination',
+                    clickable: true,
+                },
+                effect: 'slide',
+                speed: 600,
+                direction: 'horizontal',
+                slidesPerView: 1,
+                spaceBetween: 0,
+            });
+
+            // Initialize AOS (Animate on Scroll)
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 50,
+                easing: 'ease-out-cubic'
+            });
+
+            // Add smooth loading for images
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
