@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu | The API-tizer Café</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836') no-repeat center center fixed;
+      background-size: cover;
+      color: #222;
+      padding: 50px 20px;
+      position: relative;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      z-index: -1;
+      transition: background-color 0.3s;
+    }
+
+    body.dark-mode {
+      color: #eee;
+    }
+
+    body.dark-mode::before {
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    .menu-container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 3rem;
+      color: #d87323;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 40px;
+    }
+
+    .filters {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .filter-btn {
+      display: inline-block;
+      margin: 5px;
+      padding: 8px 16px;
+      background: #f5c06c;
+      color: #000;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: #d87323;
+      color: #fff;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .menu-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+      cursor: pointer;
+    }
+
+    .menu-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .menu-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .menu-desc {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #ffd96a;
+      color: #222;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 15px;
+      margin-top: 10px;
+    }
+
+    body.dark-mode .menu-card {
+      background: #2b2b2b;
+    }
+
+    body.dark-mode .menu-title {
+      color: #fff;
+    }
+
+    body.dark-mode .menu-desc {
+      color: #ccc;
+    }
+
+    body.dark-mode .filter-btn {
+      background: #444;
+      color: #eee;
+    }
+
+    body.dark-mode .filter-btn.active {
+      background: #f5c06c;
+      color: #000;
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #222;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-container">
+    <!-- Dark Mode Toggle -->
+    <div style="text-align: right; margin-bottom: 20px;">
+      <label class="switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <h1 class="title">The API-tizer Café Menu</h1>
+    <p class="subtitle">Full-stack flavors for frontend foodies and backend bakers 🍽️</p>
+
+    <div class="filters">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="snack">Snacks</button>
+      <button class="filter-btn" data-category="drink">Drinks</button>
+      <button class="filter-btn" data-category="main">Main Course</button>
+      <button class="filter-btn" data-category="dessert">Desserts</button>
+    </div>
+
+    <div class="menu-grid">
+      <!-- Snacks -->
+      <div class="menu-card" data-category="snack">
+        <div class="menu-title">JSON Fries</div>
+        <div class="menu-desc">Golden fries served in structured key-value portions.</div>
+        <div class="tag">Snack</div>
+      </div>
+      <div class="menu-card" data-category="snack">
+        <div class="menu-title">Fetch Chips</div>
+        <div class="menu-desc">Crispy tortilla chips served with async dip.</div>
+        <div class="tag">Snack</div>
+      </div>
+
+      <div class="menu-card" data-category="snack">
+    <div class="menu-title">JSON Fries</div>
+    <div class="menu-desc">Golden fries served in structured key-value portions.</div>
+    <div class="tag">Snack</div>
+  </div>
+  <div class="menu-card" data-category="snack">
+    <div class="menu-title">Fetch Chips</div>
+    <div class="menu-desc">Crispy tortilla chips served with async dip.</div>
+    <div class="tag">Snack</div>
+  </div>
+  <div class="menu-card" data-category="snack">
+    <div class="menu-title">Token Tacos</div>
+    <div class="menu-desc">Mini tacos seasoned with secure authentication spice.</div>
+    <div class="tag">Snack</div>
+  </div>
+
+      <!-- Main Courses -->
+      <div class="menu-card" data-category="main">
+        <div class="menu-title">RESTful Wrap</div>
+        <div class="menu-desc">Tortilla wrap grilled with fresh APIs and endpoints.</div>
+        <div class="tag">Main</div>
+      </div>
+      <div class="menu-card" data-category="main">
+        <div class="menu-title">React-a-Roni Pizza</div>
+        <div class="menu-desc">Cheesy slices served in reusable components.</div>
+        <div class="tag">Main</div>
+      </div>
+      <div class="menu-card" data-category="main">
+        <div class="menu-title">Full Stack Burger</div>
+        <div class="menu-desc">Juicy patties layered like frontend & backend stacks.</div>
+        <div class="tag">Main</div>
+      </div>
+
+      <div class="menu-card" data-category="main">
+    <div class="menu-title">RESTful Wrap</div>
+    <div class="menu-desc">Tortilla wrap grilled with fresh APIs and endpoints.</div>
+    <div class="tag">Main</div>
+  </div>
+  <div class="menu-card" data-category="main">
+    <div class="menu-title">React-a-Roni Pizza</div>
+    <div class="menu-desc">Cheesy slices served in reusable components.</div>
+    <div class="tag">Main</div>
+  </div>
+  <div class="menu-card" data-category="main">
+    <div class="menu-title">Full Stack Burger</div>
+    <div class="menu-desc">Juicy patties layered like frontend & backend stacks.</div>
+    <div class="tag">Main</div>
+  </div>
+
+      <!-- Drinks -->
+      <div class="menu-card" data-category="drink">
+        <div class="menu-title">API-latte</div>
+        <div class="menu-desc">Smooth espresso layered with cloud-based foam.</div>
+        <div class="tag">Drink</div>
+      </div>
+      <div class="menu-card" data-category="drink">
+        <div class="menu-title">Bug-Free Brew</div>
+        <div class="menu-desc">Caffeinated drink that compiles without errors.</div>
+        <div class="tag">Drink</div>
+      </div>
+      <div class="menu-card" data-category="drink">
+        <div class="menu-title">Cold Java</div>
+        <div class="menu-desc">Iced coffee brewed with object-oriented beans.</div>
+        <div class="tag">Drink</div>
+      </div>
+<div class="menu-card" data-category="drink">
+    <div class="menu-title">API-latte</div>
+    <div class="menu-desc">Smooth espresso layered with cloud-based foam.</div>
+    <div class="tag">Drink</div>
+  </div>
+  <div class="menu-card" data-category="drink">
+    <div class="menu-title">Bug-Free Brew</div>
+    <div class="menu-desc">Caffeinated drink that compiles without errors.</div>
+    <div class="tag">Drink</div>
+  </div>
+  <div class="menu-card" data-category="drink">
+    <div class="menu-title">Cold Java</div>
+    <div class="menu-desc">Iced coffee brewed with object-oriented beans.</div>
+    <div class="tag">Drink</div>
+  </div>
+
+      <!-- Desserts -->
+      <div class="menu-card" data-category="dessert">
+        <div class="menu-title">404 Not Found Cake</div>
+        <div class="menu-desc">A surprise lava cake hidden in plain sight.</div>
+        <div class="tag">Dessert</div>
+      </div>
+      <div class="menu-card" data-category="dessert">
+        <div class="menu-title">Terminal Tiramisu</div>
+        <div class="menu-desc">Layers of cream, espresso, and command-line crunch.</div>
+        <div class="tag">Dessert</div>
+      </div>
+      <div class="menu-card" data-category="drink">
+    <div class="menu-title">API-latte</div>
+    <div class="menu-desc">Smooth espresso layered with cloud-based foam.</div>
+    <div class="tag">Drink</div>
+  </div>
+  <div class="menu-card" data-category="drink">
+    <div class="menu-title">Bug-Free Brew</div>
+    <div class="menu-desc">Caffeinated drink that compiles without errors.</div>
+    <div class="tag">Drink</div>
+  </div>
+  <div class="menu-card" data-category="drink">
+    <div class="menu-title">Cold Java</div>
+    <div class="menu-desc">Iced coffee brewed with object-oriented beans.</div>
+    <div class="tag">Drink</div>
+  </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Filter + Dark Mode Script -->
+  <script>
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.menu-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        cards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Dark Mode Toggle
+    const toggle = document.getElementById('modeToggle');
+    const body = document.body;
+
+    // Load saved mode
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
+</body>
+</html>
