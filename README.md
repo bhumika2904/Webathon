@@ -20,4 +20,4 @@ The API-tizer is a modern, interactive, and gamified café web application desig
 🚀 Tech Stack
 Frontend: HTML, CSS, JavaScript
 
-Deployment: Netlify / GitHub Pages
+Deployment: Vercel / GitHub Pages
